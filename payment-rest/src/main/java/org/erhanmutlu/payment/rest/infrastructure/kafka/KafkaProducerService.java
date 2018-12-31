@@ -21,26 +21,5 @@ public class KafkaProducerService {
     @Transactional("kafkaTransactionManager")
     public void write(String topicName, CreatePaymentRequestMessage createPaymentRequestMessage) {
         kafkaTemplate.send(topicName, createPaymentRequestMessage);
-//        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topicName, createPaymentRequestMessage);
-//        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-//
-//            @Override
-//            public void onSuccess(SendResult<String, Object> result) {
-//                logger.info("success");
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable ex) {
-//                logger.info("fail");
-//            }
-//        });
     }
-
-//    @Transactional("kafkaTransactionManager")
-//    public void write(List<String> topicNames, Payment payment){
-//        kafkaTemplate.executeInTransaction(kafkaOperations -> {
-//            topicNames.forEach(topic -> kafkaOperations.send(topic, payment));
-//            return true;
-//        });
-//    }
 }

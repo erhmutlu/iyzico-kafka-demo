@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class KafkaListeners {
+public class PaymentListeners {
 
-    private static final Logger logger = LoggerFactory.getLogger(KafkaListeners.class);
+    private static final Logger logger = LoggerFactory.getLogger(PaymentListeners.class);
 
-    @KafkaListener(topics = "TopicY", groupId = "payment-group-1", containerFactory = "kafkaListenerContainerFactory", errorHandler = "kafkaListenerErrorHandler")
+    @KafkaListener(topics = "t_payment_request", groupId = "payment-group-1", containerFactory = "kafkaListenerContainerFactory", errorHandler = "kafkaListenerErrorHandler")
     @SendTo("Topic2")
     public CreatePaymentRequestMessage consume(CreatePaymentRequestMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {

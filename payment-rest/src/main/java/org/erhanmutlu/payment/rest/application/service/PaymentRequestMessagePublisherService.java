@@ -6,6 +6,7 @@ import org.erhanmutlu.payment.rest.infrastructure.kafka.KafkaProducerService;
 import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,6 +17,9 @@ public class PaymentRequestMessagePublisherService {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentRequestMessagePublisherService.class);
 
+    @Value("${kafka.topics.payment:t_payment}")
+    public String paymentRequestTopic;
+
     private KafkaProducerService kafkaWriter;
 
     public PaymentRequestMessagePublisherService(KafkaProducerService kafkaWriter) {
@@ -25,7 +29,7 @@ public class PaymentRequestMessagePublisherService {
     public void publishAuthPayment(CreatePaymentRequest createPaymentRequest) {
         CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
         logger.info("message is prepared");
-        kafkaWriter.write("TopicY", createPaymentRequestMessage);
+        kafkaWriter.write(paymentRequestTopic, createPaymentRequestMessage);
     }
 
     private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {

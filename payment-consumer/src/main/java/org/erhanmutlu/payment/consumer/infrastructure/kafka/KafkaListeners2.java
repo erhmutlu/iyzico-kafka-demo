@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-@KafkaListener(topics = "TopicY", groupId = "payment-group-2", containerFactory = "kafkaListenerContainerFactory")
+@KafkaListener(topics = "t_payment_request", groupId = "payment-group-2", containerFactory = "kafkaListenerContainerFactory")
 public class KafkaListeners2 {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaListeners2.class);

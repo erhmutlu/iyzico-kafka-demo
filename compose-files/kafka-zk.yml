@@ -17,7 +17,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: "1"
       KAFKA_LOG_DIRS: /logs
-      KAFKA_CREATE_TOPICS: "Topic1:20:1,Topic2:5:1,TopicY:20:1"
+      KAFKA_CREATE_TOPICS: "t_payment_request:10:1,Topic2:5:1,TopicBenchmark:10:1"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
     volumes:
       - ~/Applications/kafka/logs:/logs

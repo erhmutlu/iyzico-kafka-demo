@@ -2,13 +2,12 @@ package org.erhanmutlu.kafkacommon;
 
 import java.math.BigDecimal;
 
-public class CreatePaymentRequestMessage {
+public class CreatePaymentRequestMessage extends IyzicoIdempotentMessage {
     private BigDecimal price;
     private String conversationId;
     private String apiKey;
     private String secretKey;
     private PaymentType paymentType;
-    private String uniqueId;
 
     public BigDecimal getPrice() {
         return price;
@@ -48,13 +47,5 @@ public class CreatePaymentRequestMessage {
 
     public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
     }
 }
