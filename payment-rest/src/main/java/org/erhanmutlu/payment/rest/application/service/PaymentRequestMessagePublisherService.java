@@ -1,9 +1,9 @@
-package org.erhanmutlu.payment.rest.service;
+package org.erhanmutlu.payment.rest.application.service;
 
 import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
 import org.erhanmutlu.kafkacommon.PaymentType;
-import org.erhanmutlu.payment.rest.service.kafka.KafkaProducerService;
-import org.erhanmutlu.payment.rest.request.CreatePaymentRequest;
+import org.erhanmutlu.payment.rest.infrastructure.kafka.KafkaProducerService;
+import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

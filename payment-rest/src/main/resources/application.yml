@@ -1,3 +1,7 @@
 spring:
   kafka:
     bootstrap-servers: 127.0.0.1:9092
+
+logging:
+  file: ${java.io.tmpdir}/iyzico-kafka-demo-payment-rest.log
+  config: classpath:logback.xml

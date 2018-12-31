@@ -1,10 +1,12 @@
-package org.erhanmutlu.payment.consumer;
+package org.erhanmutlu.payment.consumer.configuration;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.erhanmutlu.payment.consumer.CustomConsumerAwareRebalanceListener;
+import org.erhanmutlu.payment.consumer.CustomErrorHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
-package org.erhanmutlu.payment.rest.controller;
+package org.erhanmutlu.payment.rest.application.controller;
 
-import org.erhanmutlu.payment.rest.request.CreatePaymentRequest;
-import org.erhanmutlu.payment.rest.service.PaymentRequestMessagePublisherService;
+import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
+import org.erhanmutlu.payment.rest.application.service.PaymentRequestMessagePublisherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

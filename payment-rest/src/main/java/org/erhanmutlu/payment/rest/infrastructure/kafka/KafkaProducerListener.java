@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.rest.service.kafka;
+package org.erhanmutlu.payment.rest.infrastructure.kafka;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;

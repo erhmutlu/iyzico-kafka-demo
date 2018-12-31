@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.rest.request;
+package org.erhanmutlu.payment.rest.application.request;
 
 import javax.validation.constraints.NotNull;
 

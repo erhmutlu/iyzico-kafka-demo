@@ -1,14 +1,11 @@
-package org.erhanmutlu.payment.rest.service.kafka;
+package org.erhanmutlu.payment.rest.infrastructure.kafka;
 
 import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Component
 public class KafkaProducerService {
