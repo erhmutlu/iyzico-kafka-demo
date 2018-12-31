@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.rest.configuration;
+package org.erhanmutlu.payment.rest.infrastructure.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;

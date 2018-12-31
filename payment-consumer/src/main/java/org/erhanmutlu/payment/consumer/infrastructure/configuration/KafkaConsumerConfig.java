@@ -1,12 +1,14 @@
-package org.erhanmutlu.payment.consumer.configuration;
+package org.erhanmutlu.payment.consumer.infrastructure.configuration;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.erhanmutlu.payment.consumer.CustomConsumerAwareRebalanceListener;
-import org.erhanmutlu.payment.consumer.CustomErrorHandler;
+import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomConsumerAwareRebalanceListener;
+import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomErrorHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +16,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
-import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;
-import org.springframework.kafka.listener.ConsumerAwareRebalanceListener;
-import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.*;
 import org.springframework.kafka.support.LogIfLevelEnabled;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConfig {
+public class KafkaConsumerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -49,16 +48,16 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(KafkaTemplate kafkaTemplate) {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(8);
         factory.setAutoStartup(true);
-        factory.setReplyTemplate(kafkaTemplate());
-        factory.getContainerProperties().setPollTimeout(6000);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
+        factory.setReplyTemplate(kafkaTemplate);
+//        factory.getContainerProperties().setPollTimeout(6000);
         factory.getContainerProperties().setConsumerTaskExecutor(messageProcessorExecutor());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
         factory.getContainerProperties().setCommitLogLevel(LogIfLevelEnabled.Level.INFO);
 
         return factory;
@@ -95,24 +94,5 @@ public class KafkaConfig {
         return props;
     }
 
-    @Bean
-    public ProducerFactory<String, Object> producerFactory() {
-        DefaultKafkaProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
-        return producerFactory;
-    }
 
-    @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        KafkaTemplate<String, Object> kafkaTemplate = new KafkaTemplate<>(producerFactory());
-        return kafkaTemplate;
-    }
-
-    private Map<String, Object> producerConfigs() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ProducerConfig.ACKS_CONFIG, "all");
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        return props;
-    }
 }

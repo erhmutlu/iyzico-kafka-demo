@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.consumer;
+package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
 import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
 import org.slf4j.Logger;
