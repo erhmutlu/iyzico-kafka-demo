@@ -10,7 +10,7 @@
     <modules>
         <module>kafka-common</module>
         <module>payment-rest</module>
-        <module>kafka-listener</module>
+        <module>payment-consumer</module>
     </modules>
 
     <packaging>pom</packaging>

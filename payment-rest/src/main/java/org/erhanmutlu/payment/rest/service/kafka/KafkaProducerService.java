@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.rest;
+package org.erhanmutlu.payment.rest.service.kafka;
 
 import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
 import org.slf4j.Logger;
@@ -11,32 +11,32 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Component
-public class CustomKafkaWriter {
+public class KafkaProducerService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomKafkaWriter.class);
+    private static final Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
 
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public CustomKafkaWriter(KafkaTemplate<String, Object> kafkaTemplate) {
+    public KafkaProducerService(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     @Transactional("kafkaTransactionManager")
     public void write(String topicName, CreatePaymentRequestMessage createPaymentRequestMessage) {
-//        kafkaTemplate.send(topicName, createPaymentRequestMessage);
-        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topicName, createPaymentRequestMessage);
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-
-            @Override
-            public void onSuccess(SendResult<String, Object> result) {
-                logger.info("success");
-            }
-
-            @Override
-            public void onFailure(Throwable ex) {
-                logger.info("fail");
-            }
-        });
+        kafkaTemplate.send(topicName, createPaymentRequestMessage);
+//        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topicName, createPaymentRequestMessage);
+//        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
+//
+//            @Override
+//            public void onSuccess(SendResult<String, Object> result) {
+//                logger.info("success");
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable ex) {
+//                logger.info("fail");
+//            }
+//        });
     }
 
 //    @Transactional("kafkaTransactionManager")

@@ -1,5 +1,9 @@
-package org.erhanmutlu.payment.rest;
+package org.erhanmutlu.payment.rest.controller;
 
+import org.erhanmutlu.payment.rest.request.CreatePaymentRequest;
+import org.erhanmutlu.payment.rest.service.PaymentRequestMessagePublisherService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +14,8 @@ import javax.validation.Valid;
 @RestController
 public class PaymentController {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
     private final PaymentRequestMessagePublisherService paymentRequestMessagePublisherService;
 
     public PaymentController(PaymentRequestMessagePublisherService paymentRequestMessagePublisherService) {
@@ -18,7 +24,7 @@ public class PaymentController {
 
     @PostMapping(path = "/api/payment/auth", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String auth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-//        paymentRequestMessagePublisherService.publishAuthPayment(createPaymentRequest);
+        paymentRequestMessagePublisherService.publishAuthPayment(createPaymentRequest);
         return "OK";
     }
 }

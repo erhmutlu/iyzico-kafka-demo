@@ -1,7 +1,9 @@
-package org.erhanmutlu.payment.rest;
+package org.erhanmutlu.payment.rest.service;
 
 import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
 import org.erhanmutlu.kafkacommon.PaymentType;
+import org.erhanmutlu.payment.rest.service.kafka.KafkaProducerService;
+import org.erhanmutlu.payment.rest.request.CreatePaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,9 @@ public class PaymentRequestMessagePublisherService {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentRequestMessagePublisherService.class);
 
-    private CustomKafkaWriter kafkaWriter;
+    private KafkaProducerService kafkaWriter;
 
-    public PaymentRequestMessagePublisherService(CustomKafkaWriter kafkaWriter) {
+    public PaymentRequestMessagePublisherService(KafkaProducerService kafkaWriter) {
         this.kafkaWriter = kafkaWriter;
     }
 
@@ -26,7 +28,7 @@ public class PaymentRequestMessagePublisherService {
         kafkaWriter.write("TopicY", createPaymentRequestMessage);
     }
 
-    public CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
+    private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
         CreatePaymentRequestMessage createPaymentRequestMessage = new CreatePaymentRequestMessage();
         createPaymentRequestMessage.setPaymentType(paymentType);
         createPaymentRequestMessage.setApiKey(createPaymentRequest.getApiKey());

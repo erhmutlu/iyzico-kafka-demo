@@ -1,4 +1,4 @@
-package org.erhanmutlu.kafkalistener;
+package org.erhanmutlu.payment.consumer;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.slf4j.Logger;
