@@ -2,6 +2,7 @@ package org.erhanmutlu.payment.rest.infrastructure.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.erhanmutlu.kafkacommon.IyzicoIdempotentMessage;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.KafkaProducerListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,20 +33,20 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory() {
-        DefaultKafkaProducerFactory<String, Object> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
+    public ProducerFactory<String, IyzicoIdempotentMessage> producerFactory() {
+        DefaultKafkaProducerFactory<String, IyzicoIdempotentMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
         producerFactory.setTransactionIdPrefix("payment.publish."); //makes producer is idempotent
         return producerFactory;
     }
 
     @Bean
-    public ProducerListener producerListener() {
-        return new KafkaProducerListener<String, Object>();
+    public ProducerListener<String, IyzicoIdempotentMessage> producerListener() {
+        return new KafkaProducerListener();
     }
 
     @Bean
-    public KafkaTemplate<String, Object> kafkaTemplate() {
-        KafkaTemplate<String, Object> kafkaTemplate = new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, IyzicoIdempotentMessage> kafkaTemplate() {
+        KafkaTemplate<String, IyzicoIdempotentMessage> kafkaTemplate = new KafkaTemplate<>(producerFactory());
         kafkaTemplate.setProducerListener(producerListener());
         return kafkaTemplate;
     }

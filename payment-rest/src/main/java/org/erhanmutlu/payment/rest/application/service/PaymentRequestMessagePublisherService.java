@@ -20,16 +20,16 @@ public class PaymentRequestMessagePublisherService {
     @Value("${kafka.topics.payment:t_payment}")
     public String paymentRequestTopic;
 
-    private KafkaProducerService kafkaWriter;
+    private KafkaProducerService kafkaProducerService;
 
-    public PaymentRequestMessagePublisherService(KafkaProducerService kafkaWriter) {
-        this.kafkaWriter = kafkaWriter;
+    public PaymentRequestMessagePublisherService(KafkaProducerService kafkaProducerService) {
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public void publishAuthPayment(CreatePaymentRequest createPaymentRequest) {
         CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
         logger.info("message is prepared");
-        kafkaWriter.write(paymentRequestTopic, createPaymentRequestMessage);
+        kafkaProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
     }
 
     private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
