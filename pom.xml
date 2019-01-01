@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <modules>
-        <module>kafka-common</module>
+        <module>payment-common</module>
         <module>payment-rest</module>
         <module>payment-consumer</module>
     </modules>
@@ -56,7 +56,7 @@
 
             <dependency>
                 <groupId>org.erhanmutlu</groupId>
-                <artifactId>kafka-common</artifactId>
+                <artifactId>payment-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

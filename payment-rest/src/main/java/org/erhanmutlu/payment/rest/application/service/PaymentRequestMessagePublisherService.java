@@ -1,8 +1,8 @@
 package org.erhanmutlu.payment.rest.application.service;
 
-import org.erhanmutlu.kafkacommon.CreatePaymentRequestMessage;
-import org.erhanmutlu.kafkacommon.PaymentType;
-import org.erhanmutlu.payment.rest.infrastructure.kafka.KafkaProducerService;
+import org.erhanmutlu.payment.common.CreatePaymentRequestMessage;
+import org.erhanmutlu.payment.common.PaymentType;
+import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerService;
 import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +20,16 @@ public class PaymentRequestMessagePublisherService {
     @Value("${kafka.topics.payment:t_payment}")
     public String paymentRequestTopic;
 
-    private KafkaProducerService kafkaProducerService;
+    private MessageProducerService messageProducerService;
 
-    public PaymentRequestMessagePublisherService(KafkaProducerService kafkaProducerService) {
-        this.kafkaProducerService = kafkaProducerService;
+    public PaymentRequestMessagePublisherService(MessageProducerService messageProducerService) {
+        this.messageProducerService = messageProducerService;
     }
 
     public void publishAuthPayment(CreatePaymentRequest createPaymentRequest) {
         CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
         logger.info("message is prepared");
-        kafkaProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
+        messageProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
     }
 
     private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {

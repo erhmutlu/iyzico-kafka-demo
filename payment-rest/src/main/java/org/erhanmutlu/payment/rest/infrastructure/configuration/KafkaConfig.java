@@ -2,8 +2,9 @@ package org.erhanmutlu.payment.rest.infrastructure.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.erhanmutlu.kafkacommon.IyzicoIdempotentMessage;
-import org.erhanmutlu.payment.rest.infrastructure.kafka.KafkaProducerListener;
+import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerListener;
+import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +42,7 @@ public class KafkaConfig {
 
     @Bean
     public ProducerListener<String, IyzicoIdempotentMessage> producerListener() {
-        return new KafkaProducerListener();
+        return new MessageProducerListener();
     }
 
     @Bean
@@ -59,6 +60,13 @@ public class KafkaConfig {
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "payment.publish.");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MessageProducerInterceptor.class.getName());
+        props.put(ProducerConfig.RETRIES_CONFIG, 10);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
+        props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1000);
+//        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, 1);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 10);
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 16 * 1024 * 1024);  //default 32 MB
         return props;
     }
 }

@@ -1,16 +1,14 @@
 package org.erhanmutlu.payment.rest.infrastructure.kafka;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.erhanmutlu.kafkacommon.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.support.ProducerListener;
 
-public class KafkaProducerListener implements ProducerListener<String, IyzicoIdempotentMessage> {
+public class MessageProducerListener implements ProducerListener<String, IyzicoIdempotentMessage> {
 
-    private static final Logger logger = LoggerFactory.getLogger(KafkaProducerListener.class);
-
-
+    private static final Logger logger = LoggerFactory.getLogger(MessageProducerListener.class);
 
     @Override
     public void onSuccess(String topic, Integer partition, String key, IyzicoIdempotentMessage message, RecordMetadata recordMetadata) {

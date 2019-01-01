@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>org.erhanmutlu</groupId>
-            <artifactId>kafka-common</artifactId>
+            <artifactId>payment-common</artifactId>
         </dependency>
     </dependencies>
 
