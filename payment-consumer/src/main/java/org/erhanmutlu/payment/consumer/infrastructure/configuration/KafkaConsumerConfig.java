@@ -43,11 +43,6 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerAwareRebalanceListener consumerAwareRebalanceListener() {
-        return new CustomConsumerAwareRebalanceListener();
-    }
-
-    @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(KafkaTemplate kafkaTemplate) {
 
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -55,10 +50,11 @@ public class KafkaConsumerConfig {
         factory.setConcurrency(8);
         factory.setAutoStartup(true);
         factory.setReplyTemplate(kafkaTemplate);
-//        factory.getContainerProperties().setPollTimeout(6000);
-        factory.getContainerProperties().setConsumerTaskExecutor(messageProcessorExecutor());
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
-        factory.getContainerProperties().setCommitLogLevel(LogIfLevelEnabled.Level.INFO);
+        ContainerProperties containerProperties = factory.getContainerProperties();
+        containerProperties.setConsumerTaskExecutor(messageProcessorExecutor());
+        containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
+        containerProperties.setIdleEventInterval(30000L);
+        containerProperties.setCommitLogLevel(LogIfLevelEnabled.Level.INFO);
 
         return factory;
     }
@@ -83,14 +79,10 @@ public class KafkaConsumerConfig {
     private Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-//        props.put(ConsumerConfig.GROUP_ID_CONFIG, "payment-group-1");
         props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, "4000");
         props.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, "50000");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
-//        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
-//        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "10000");
-
         return props;
     }
 

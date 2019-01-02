@@ -5,9 +5,11 @@ import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.listener.ConsumerAwareRebalanceListener;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+@Service
 public class CustomConsumerAwareRebalanceListener implements ConsumerAwareRebalanceListener{
 
     private static final Logger logger = LoggerFactory.getLogger(CustomConsumerAwareRebalanceListener.class);
