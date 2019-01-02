@@ -1,6 +1,6 @@
 package org.erhanmutlu.payment.rest.application.service;
 
-import org.erhanmutlu.payment.common.CreatePaymentRequestMessage;
+//import org.erhanmutlu.payment.common.CreatePaymentRequestMessage;
 import org.erhanmutlu.payment.common.PaymentType;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerService;
 import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import org.erhanmutlu.avro.CreatePaymentRequestMessage;
 
 @Service
 public class PaymentRequestMessagePublisherService {
@@ -27,19 +28,29 @@ public class PaymentRequestMessagePublisherService {
     }
 
     public void publishAuthPayment(CreatePaymentRequest createPaymentRequest) {
-        CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
+//        CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
         logger.info("message is prepared");
+//        User user = User.newBuilder().setName("John Doe").setFavoriteColor("green")
+//                .setFavoriteNumber(null).build();
+        CreatePaymentRequestMessage createPaymentRequestMessage = CreatePaymentRequestMessage.newBuilder()
+                .setApiKey("s")
+                .setSecretKey("secret")
+                .setPrice("asdasd")
+                .setConversationId("12345")
+                .setUniqueId("uniquye")
+                .setPaymentType("1").build();
+
         messageProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
     }
 
-    private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
-        CreatePaymentRequestMessage createPaymentRequestMessage = new CreatePaymentRequestMessage();
-        createPaymentRequestMessage.setPaymentType(paymentType);
-        createPaymentRequestMessage.setApiKey(createPaymentRequest.getApiKey());
-        createPaymentRequestMessage.setSecretKey(createPaymentRequest.getSecretKey());
-        createPaymentRequestMessage.setConversationId(createPaymentRequest.getConversationId());
-        createPaymentRequestMessage.setPrice(new BigDecimal(createPaymentRequest.getPrice()));
-        createPaymentRequestMessage.setUniqueId(UUID.randomUUID().toString());
-        return createPaymentRequestMessage;
-    }
+//    private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
+//        CreatePaymentRequestMessage createPaymentRequestMessage = new CreatePaymentRequestMessage();
+//        createPaymentRequestMessage.setPaymentType(paymentType);
+//        createPaymentRequestMessage.setApiKey(createPaymentRequest.getApiKey());
+//        createPaymentRequestMessage.setSecretKey(createPaymentRequest.getSecretKey());
+//        createPaymentRequestMessage.setConversationId(createPaymentRequest.getConversationId());
+//        createPaymentRequestMessage.setPrice(new BigDecimal(createPaymentRequest.getPrice()));
+//        createPaymentRequestMessage.setUniqueId(UUID.randomUUID().toString());
+//        return createPaymentRequestMessage;
+//    }
 }

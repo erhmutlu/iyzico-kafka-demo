@@ -2,7 +2,9 @@ package org.erhanmutlu.payment.rest.infrastructure.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.erhanmutlu.avro.CreatePaymentRequestMessage;
 import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.rest.infrastructure.avro.AvroSerializer;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerInterceptor;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerListener;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,26 +37,26 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, IyzicoIdempotentMessage> producerFactory() {
-        DefaultKafkaProducerFactory<String, IyzicoIdempotentMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
+    public ProducerFactory<String, CreatePaymentRequestMessage> producerFactory() {
+        DefaultKafkaProducerFactory<String, CreatePaymentRequestMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
         producerFactory.setTransactionIdPrefix("payment.publish."); //makes producer is idempotent
 
-        JsonSerializer<IyzicoIdempotentMessage> valueSerializer = new JsonSerializer<>();
-        valueSerializer.setAddTypeInfo(false);
-        producerFactory.setValueSerializer(valueSerializer);
+//        JsonSerializer<IyzicoIdempotentMessage> valueSerializer = new JsonSerializer<>();
+//        valueSerializer.setAddTypeInfo(false);
+//        producerFactory.setValueSerializer(valueSerializer);
 
-        producerFactory.setKeySerializer(new StringSerializer());
+//        producerFactory.setKeySerializer(new StringSerializer());
         return producerFactory;
     }
 
     @Bean
-    public ProducerListener<String, IyzicoIdempotentMessage> producerListener() {
+    public ProducerListener<String, CreatePaymentRequestMessage> producerListener() {
         return new MessageProducerListener();
     }
 
     @Bean
-    public KafkaTemplate<String, IyzicoIdempotentMessage> kafkaTemplate() {
-        KafkaTemplate<String, IyzicoIdempotentMessage> kafkaTemplate = new KafkaTemplate<>(producerFactory());
+    public KafkaTemplate<String, CreatePaymentRequestMessage> kafkaTemplate() {
+        KafkaTemplate<String, CreatePaymentRequestMessage> kafkaTemplate = new KafkaTemplate<>(producerFactory());
         kafkaTemplate.setProducerListener(producerListener());
         return kafkaTemplate;
     }
@@ -65,8 +67,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "payment.publish.");
-//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroSerializer.class);
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MessageProducerInterceptor.class.getName());
         props.put(ProducerConfig.RETRIES_CONFIG, 10);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);

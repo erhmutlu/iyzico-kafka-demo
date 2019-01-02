@@ -1,0 +1,12 @@
+{"namespace": "org.erhanmutlu.avro",
+  "type": "record",
+  "name": "CreatePaymentRequestMessage",
+  "fields": [
+    {"name": "price", "type": {"type": "bytes", "logicalType": "decimal", "precision": 4, "scale": 2}},
+    {"name": "conversationId",  "type": "string"},
+    {"name": "apiKey",  "type": "string"},
+    {"name": "secretKey",  "type": "string"},
+    {"name": "uniqueId",  "type": "string"},
+    {"name": "paymentType",  "type": "string"}
+  ]
+}
