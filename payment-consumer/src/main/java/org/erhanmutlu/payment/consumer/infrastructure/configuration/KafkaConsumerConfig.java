@@ -1,9 +1,9 @@
 package org.erhanmutlu.payment.consumer.infrastructure.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.erhanmutlu.payment.consumer.infrastructure.serializer.CreatePaymentRequestMessageDeserializer;
 import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomConsumerAwareRebalanceListener;
 import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomErrorHandler;
 import org.erhanmutlu.payment.consumer.model.CreatePaymentRequestMessage;
@@ -21,6 +21,7 @@ import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;
 import org.springframework.kafka.listener.ConsumerAwareRebalanceListener;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.LogIfLevelEnabled;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.HashMap;
@@ -73,8 +74,9 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, CreatePaymentRequestMessage> consumerFactory() {
         DefaultKafkaConsumerFactory<String, CreatePaymentRequestMessage> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
 
-        CreatePaymentRequestMessageDeserializer valueDeserializer = new CreatePaymentRequestMessageDeserializer();
-        valueDeserializer.setRemoveTypeHeaders(true);
+//        CreatePaymentRequestMessageDeserializer valueDeserializer = new CreatePaymentRequestMessageDeserializer();
+//        valueDeserializer.setRemoveTypeHeaders(true);
+        JsonDeserializer<CreatePaymentRequestMessage> valueDeserializer = new JsonDeserializer<>(CreatePaymentRequestMessage.class, new ObjectMapper());
         consumerFactory.setValueDeserializer(valueDeserializer);
 
         consumerFactory.setKeyDeserializer(new StringDeserializer());
