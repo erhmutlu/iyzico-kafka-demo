@@ -1,7 +1,7 @@
 package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
 import org.apache.kafka.clients.consumer.Consumer;
-import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.consumer.model.IyzicoIdempotentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;

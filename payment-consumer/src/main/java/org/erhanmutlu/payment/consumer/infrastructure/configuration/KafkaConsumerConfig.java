@@ -3,9 +3,10 @@ package org.erhanmutlu.payment.consumer.infrastructure.configuration;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.erhanmutlu.payment.consumer.infrastructure.serializer.CreatePaymentRequestMessageDeserializer;
 import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomConsumerAwareRebalanceListener;
 import org.erhanmutlu.payment.consumer.infrastructure.kafka.CustomErrorHandler;
-import org.erhanmutlu.payment.consumer.infrastructure.kafka.MessageProducerInterceptor;
+import org.erhanmutlu.payment.consumer.model.CreatePaymentRequestMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,6 @@ import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;
 import org.springframework.kafka.listener.ConsumerAwareRebalanceListener;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.LogIfLevelEnabled;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.HashMap;
@@ -49,9 +49,9 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory(KafkaTemplate kafkaTemplate) {
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CreatePaymentRequestMessage>> kafkaListenerContainerFactory(KafkaTemplate kafkaTemplate) {
 
-        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        ConcurrentKafkaListenerContainerFactory<String, CreatePaymentRequestMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(8);
         factory.setAutoStartup(true);
@@ -70,12 +70,13 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, String> consumerFactory() {
-        DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    public ConsumerFactory<String, CreatePaymentRequestMessage> consumerFactory() {
+        DefaultKafkaConsumerFactory<String, CreatePaymentRequestMessage> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
 
-        JsonDeserializer<String> valueDeserializer = new JsonDeserializer<>();
-        valueDeserializer.addTrustedPackages("org.erhanmutlu.payment.common");
+        CreatePaymentRequestMessageDeserializer valueDeserializer = new CreatePaymentRequestMessageDeserializer();
+        valueDeserializer.setRemoveTypeHeaders(true);
         consumerFactory.setValueDeserializer(valueDeserializer);
+
         consumerFactory.setKeyDeserializer(new StringDeserializer());
 
         return consumerFactory;
@@ -94,6 +95,4 @@ public class KafkaConsumerConfig {
 
         return props;
     }
-
-
 }

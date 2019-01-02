@@ -1,6 +1,5 @@
 package org.erhanmutlu.payment.consumer.infrastructure.configuration;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.erhanmutlu.payment.consumer.infrastructure.kafka.MessageProducerInterceptor;

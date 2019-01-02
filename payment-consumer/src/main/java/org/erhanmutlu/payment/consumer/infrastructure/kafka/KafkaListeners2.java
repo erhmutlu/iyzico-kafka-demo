@@ -1,6 +1,6 @@
 package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
-import org.erhanmutlu.payment.common.CreatePaymentRequestMessage;
+import org.erhanmutlu.payment.consumer.model.CreatePaymentRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaHandler;

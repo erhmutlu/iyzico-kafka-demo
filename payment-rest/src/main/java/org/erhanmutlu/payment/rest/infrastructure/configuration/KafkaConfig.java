@@ -3,8 +3,8 @@ package org.erhanmutlu.payment.rest.infrastructure.configuration;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
-import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerListener;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerInterceptor;
+import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +12,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.ProducerListener;
+import org.springframework.kafka.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.transaction.support.AbstractPlatformTransactionManager;
@@ -37,6 +38,12 @@ public class KafkaConfig {
     public ProducerFactory<String, IyzicoIdempotentMessage> producerFactory() {
         DefaultKafkaProducerFactory<String, IyzicoIdempotentMessage> producerFactory = new DefaultKafkaProducerFactory<>(producerConfigs());
         producerFactory.setTransactionIdPrefix("payment.publish."); //makes producer is idempotent
+
+        JsonSerializer<IyzicoIdempotentMessage> valueSerializer = new JsonSerializer<>();
+        valueSerializer.setAddTypeInfo(false);
+        producerFactory.setValueSerializer(valueSerializer);
+
+        producerFactory.setKeySerializer(new StringSerializer());
         return producerFactory;
     }
 
@@ -58,8 +65,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true");
         props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "payment.publish.");
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, MessageProducerInterceptor.class.getName());
         props.put(ProducerConfig.RETRIES_CONFIG, 10);
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 15000);
