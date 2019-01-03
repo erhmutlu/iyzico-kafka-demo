@@ -4,7 +4,7 @@ import org.erhanmutlu.payment.common.PaymentType;
 
 import java.math.BigDecimal;
 
-public class CreatePaymentRequestMessage extends IyzicoIdempotentMessage {
+public class PaymentPreAuthRequestMessage extends IyzicoIdempotentMessage {
     private BigDecimal price;
     private String conversationId;
     private String apiKey;

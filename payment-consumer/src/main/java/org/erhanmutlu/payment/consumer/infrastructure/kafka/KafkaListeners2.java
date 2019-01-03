@@ -1,6 +1,8 @@
 package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
-import org.erhanmutlu.payment.common.kafka.CreatePaymentRequestMessage;
+import org.erhanmutlu.payment.common.kafka.PaymentAuthRequestMessage;
+import org.erhanmutlu.payment.common.kafka.PaymentPostAuthRequestMessage;
+import org.erhanmutlu.payment.common.kafka.PaymentPreAuthRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -17,12 +19,28 @@ public class KafkaListeners2 {
 
     private static final Logger logger = LoggerFactory.getLogger(KafkaListeners2.class);
 
-    @KafkaHandler(isDefault = true)
-    public void consume(CreatePaymentRequestMessage message,
+    @KafkaHandler
+    public void consumePaymentAuthMessage(PaymentAuthRequestMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        logger.info("partition: {}, Message read. uniqueId: {}, conversationId: {}, paymentType: {}", partition, message.getUniqueId(), message.getConversationId(), message.getPaymentType());
+        logger.info("consuming auth message from partition: {} with uniqueId: {}, conversationId: {}", partition, message.getUniqueId(), message.getConversationId());
         wait4();
-        logger.info("awake");
+        logger.info("done");
+    }
+
+    @KafkaHandler
+    public void consumePaymentPreAuthMessage(PaymentPreAuthRequestMessage message,
+                        @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
+        logger.info("consuming pre-auth message from partition: {} with uniqueId: {}, conversationId: {}", partition, message.getUniqueId(), message.getConversationId());
+        wait4();
+        logger.info("done");
+    }
+
+    @KafkaHandler
+    public void consumePaymentPostAuthMessage(PaymentPostAuthRequestMessage message,
+                        @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
+        logger.info("consuming post-auth message from partition: {} with uniqueId: {}", partition, message.getUniqueId());
+        wait4();
+        logger.info("done");
     }
 
     private void wait4() {

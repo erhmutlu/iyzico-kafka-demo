@@ -1,11 +1,12 @@
 package org.erhanmutlu.payment.rest.application.request;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
-public class CreatePaymentRequest {
+public class PaymentAuthRequest {
 
     @NotNull
-    private String price;
+    private BigDecimal price;
 
     private String conversationId;
 
@@ -15,11 +16,11 @@ public class CreatePaymentRequest {
     @NotNull
     private String secretKey;
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

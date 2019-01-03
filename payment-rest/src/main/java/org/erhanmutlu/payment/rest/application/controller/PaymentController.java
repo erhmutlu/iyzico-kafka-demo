@@ -1,6 +1,8 @@
 package org.erhanmutlu.payment.rest.application.controller;
 
-import org.erhanmutlu.payment.rest.application.request.CreatePaymentRequest;
+import org.erhanmutlu.payment.rest.application.request.PaymentAuthRequest;
+import org.erhanmutlu.payment.rest.application.request.PaymentPostAuthRequest;
+import org.erhanmutlu.payment.rest.application.request.PaymentPreAuthRequest;
 import org.erhanmutlu.payment.rest.application.response.CreatePaymentResponse;
 import org.erhanmutlu.payment.rest.application.service.PaymentRequestMessagePublisherService;
 import org.slf4j.Logger;
@@ -24,17 +26,17 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/api/payment/auth", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CreatePaymentResponse auth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-        return paymentRequestMessagePublisherService.publishAuthPayment(createPaymentRequest);
+    public CreatePaymentResponse auth(@RequestBody @Valid PaymentAuthRequest paymentAuthRequest) {
+        return paymentRequestMessagePublisherService.publishAuthPayment(paymentAuthRequest);
     }
 
     @PostMapping(path = "/api/payment/pre-auth", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CreatePaymentResponse preAuth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-        return paymentRequestMessagePublisherService.publishPreAuthPayment(createPaymentRequest);
+    public CreatePaymentResponse preAuth(@RequestBody @Valid PaymentPreAuthRequest paymentPreAuthRequest) {
+        return paymentRequestMessagePublisherService.publishPreAuthPayment(paymentPreAuthRequest);
     }
 
     @PostMapping(path = "/api/payment/post-auth", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CreatePaymentResponse postAuth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
-        return paymentRequestMessagePublisherService.publishPostAuthPayment(createPaymentRequest);
+    public CreatePaymentResponse postAuth(@RequestBody @Valid PaymentPostAuthRequest paymentPostAuthRequest) {
+        return paymentRequestMessagePublisherService.publishPostAuthPayment(paymentPostAuthRequest);
     }
 }

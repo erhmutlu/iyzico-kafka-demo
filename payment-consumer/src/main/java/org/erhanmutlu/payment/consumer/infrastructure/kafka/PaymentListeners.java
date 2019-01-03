@@ -1,6 +1,6 @@
 package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
-import org.erhanmutlu.payment.common.kafka.CreatePaymentRequestMessage;
+import org.erhanmutlu.payment.common.kafka.PaymentAuthRequestMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
@@ -14,18 +14,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
-@Service
+//@Service
 public class PaymentListeners {
 
     private static final Logger logger = LoggerFactory.getLogger(PaymentListeners.class);
 
-    @KafkaListener(topics = "t_payment_request", groupId = "payment-group-1", containerFactory = "kafkaListenerContainerFactory", errorHandler = "kafkaListenerErrorHandler")
-    @SendTo("Topic2")
-    public CreatePaymentRequestMessage consume(CreatePaymentRequestMessage message,
-                        @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        logger.info("partition: {}, Message read. uniqueId: {}, conversationId: {}, paymentType: {}", partition, message.getUniqueId(), message.getConversationId(), message.getPaymentType());
+//    @KafkaListener(topics = "t_payment_request", groupId = "payment-group-1", containerFactory = "kafkaListenerContainerFactory", errorHandler = "kafkaListenerErrorHandler")
+//    @SendTo("Topic2")
+    public PaymentAuthRequestMessage consume(PaymentAuthRequestMessage message,
+                                             @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
+        logger.info("partition: {}, Message read. uniqueId: {}, conversationId: {}", partition, message.getUniqueId(), message.getConversationId());
         wait4();
-        logger.info("awake");
+        logger.info("done");
 //        throw new RuntimeException("asdasd");
         return message;
     }
@@ -35,7 +35,7 @@ public class PaymentListeners {
         while (new Date().getTime() - start < 3000L) {}
     }
 
-    @EventListener
+//    @EventListener
     public void eventHandler(ListenerContainerIdleEvent event) {
         logger.info("listenerId: {}, topics: {}, idleFor: {}", event.getListenerId(), ((KafkaMessageListenerContainer)event.getSource()).getAssignedPartitions(), event.getIdleTime());
     }
