@@ -26,7 +26,7 @@ public class MessageProducerInterceptor implements ProducerInterceptor{
     @Override
     public void onAcknowledgement(RecordMetadata metadata, Exception e) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("onAck topic=%s, part=%d, offset=%d\n",
+            logger.debug(String.format("onAck topic=%s, partition=%d, offset=%d\n",
                     metadata.topic(), metadata.partition(), metadata.offset()
             ));
         }

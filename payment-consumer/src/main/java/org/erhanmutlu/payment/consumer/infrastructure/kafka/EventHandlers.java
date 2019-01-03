@@ -12,7 +12,7 @@ public class EventHandlers {
 
     private static final Logger logger = LoggerFactory.getLogger(EventHandlers.class);
 
-    @EventListener
+//    @EventListener
     public void eventHandler(ListenerContainerIdleEvent event) {
         logger.info("listenerId: {}, topics: {}, idleFor: {}", event.getListenerId(), ((KafkaMessageListenerContainer) event.getSource()).getAssignedPartitions(), event.getIdleTime());
     }
