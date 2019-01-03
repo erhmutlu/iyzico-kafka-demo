@@ -1,7 +1,7 @@
 package org.erhanmutlu.payment.rest.infrastructure.kafka;
 
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.common.kafka.IyzicoIdempotentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.support.ProducerListener;

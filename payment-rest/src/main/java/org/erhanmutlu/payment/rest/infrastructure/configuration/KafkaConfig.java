@@ -2,7 +2,7 @@ package org.erhanmutlu.payment.rest.infrastructure.configuration;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.common.kafka.IyzicoIdempotentMessage;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerListener;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerInterceptor;
 import org.springframework.beans.factory.annotation.Value;

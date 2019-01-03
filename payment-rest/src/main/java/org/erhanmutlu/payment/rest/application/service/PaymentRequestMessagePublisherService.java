@@ -1,6 +1,6 @@
 package org.erhanmutlu.payment.rest.application.service;
 
-import org.erhanmutlu.payment.common.CreatePaymentRequestMessage;
+import org.erhanmutlu.payment.common.kafka.CreatePaymentRequestMessage;
 import org.erhanmutlu.payment.common.PaymentType;
 import org.erhanmutlu.payment.rest.application.response.CreatePaymentResponse;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerService;
@@ -29,16 +29,30 @@ public class PaymentRequestMessagePublisherService {
     }
 
     public CreatePaymentResponse publishAuthPayment(CreatePaymentRequest createPaymentRequest) {
+        logger.info("publishing auth payment with conversationId: {}", createPaymentRequest.getConversationId());
         CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.AUTH);
-        logger.info("message is prepared");
+
         messageProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
 
-        CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
-        createPaymentResponse.setIyzicoPaymentUniqueIdentifier(createPaymentRequestMessage.getUniqueId());
-        createPaymentResponse.setConversationId(createPaymentRequestMessage.getConversationId());
-        createPaymentResponse.setStatus("pending");
-        createPaymentResponse.setSystemTime(Clock.systemUTC().millis());
-        return createPaymentResponse;
+        return prepareResponse(createPaymentRequestMessage);
+    }
+
+    public CreatePaymentResponse publishPreAuthPayment(CreatePaymentRequest createPaymentRequest) {
+        logger.info("publishing pre-auth payment with conversationId: {}", createPaymentRequest.getConversationId());
+        CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.PRE_AUTH);
+
+        messageProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
+
+        return prepareResponse(createPaymentRequestMessage);
+    }
+
+    public CreatePaymentResponse publishPostAuthPayment(CreatePaymentRequest createPaymentRequest) {
+        logger.info("publishing post-auth payment with conversationId: {}", createPaymentRequest.getConversationId());
+        CreatePaymentRequestMessage createPaymentRequestMessage = convert(createPaymentRequest, PaymentType.POST_AUTH);
+
+        messageProducerService.write(paymentRequestTopic, createPaymentRequestMessage);
+
+        return prepareResponse(createPaymentRequestMessage);
     }
 
     private CreatePaymentRequestMessage convert(CreatePaymentRequest createPaymentRequest, PaymentType paymentType) {
@@ -50,5 +64,14 @@ public class PaymentRequestMessagePublisherService {
         createPaymentRequestMessage.setPrice(new BigDecimal(createPaymentRequest.getPrice()));
         createPaymentRequestMessage.setUniqueId(UUID.randomUUID().toString());
         return createPaymentRequestMessage;
+    }
+
+    private CreatePaymentResponse prepareResponse(CreatePaymentRequestMessage createPaymentRequestMessage){
+        CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
+        createPaymentResponse.setIyzicoPaymentUniqueIdentifier(createPaymentRequestMessage.getUniqueId());
+        createPaymentResponse.setConversationId(createPaymentRequestMessage.getConversationId());
+        createPaymentResponse.setStatus("pending");
+        createPaymentResponse.setSystemTime(Clock.systemUTC().millis());
+        return createPaymentResponse;
     }
 }

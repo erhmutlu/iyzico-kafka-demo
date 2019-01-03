@@ -1,5 +1,5 @@
 package org.erhanmutlu.payment.common;
 
 public enum PaymentType {
-    AUTH
+    AUTH, PRE_AUTH, POST_AUTH
 }

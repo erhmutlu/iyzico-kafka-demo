@@ -1,4 +1,4 @@
-package org.erhanmutlu.payment.common;
+package org.erhanmutlu.payment.common.kafka;
 
 public abstract class IyzicoIdempotentMessage {
 

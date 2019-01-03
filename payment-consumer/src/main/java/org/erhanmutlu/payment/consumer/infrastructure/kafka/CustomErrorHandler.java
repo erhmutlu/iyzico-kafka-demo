@@ -2,7 +2,7 @@ package org.erhanmutlu.payment.consumer.infrastructure.kafka;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.common.TopicPartition;
-import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.common.kafka.IyzicoIdempotentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.listener.ConsumerAwareListenerErrorHandler;
@@ -10,7 +10,6 @@ import org.springframework.kafka.listener.ListenerExecutionFailedException;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.stereotype.Service;
 
 public class CustomErrorHandler implements ConsumerAwareListenerErrorHandler {
 

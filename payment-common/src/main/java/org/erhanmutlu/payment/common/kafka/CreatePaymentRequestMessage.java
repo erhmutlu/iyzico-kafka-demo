@@ -1,4 +1,6 @@
-package org.erhanmutlu.payment.common;
+package org.erhanmutlu.payment.common.kafka;
+
+import org.erhanmutlu.payment.common.PaymentType;
 
 import java.math.BigDecimal;
 

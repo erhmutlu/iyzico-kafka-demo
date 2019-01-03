@@ -1,6 +1,6 @@
 package org.erhanmutlu.payment.rest.infrastructure.kafka;
 
-import org.erhanmutlu.payment.common.IyzicoIdempotentMessage;
+import org.erhanmutlu.payment.common.kafka.IyzicoIdempotentMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,6 +21,6 @@ public class MessageProducerService {
     @Transactional("kafkaTransactionManager")
     public void write(String topicName, IyzicoIdempotentMessage iyzicoIdempotentMessage) {
         logger.info("message with uniqueId: {} will be written into topic: {}", iyzicoIdempotentMessage.getUniqueId(), topicName);
-        kafkaTemplate.send(topicName, iyzicoIdempotentMessage);
+        kafkaTemplate.send(topicName, iyzicoIdempotentMessage.getUniqueId(), iyzicoIdempotentMessage);
     }
 }

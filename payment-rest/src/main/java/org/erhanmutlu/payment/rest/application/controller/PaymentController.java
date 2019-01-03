@@ -27,4 +27,14 @@ public class PaymentController {
     public CreatePaymentResponse auth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
         return paymentRequestMessagePublisherService.publishAuthPayment(createPaymentRequest);
     }
+
+    @PostMapping(path = "/api/payment/pre-auth", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CreatePaymentResponse preAuth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+        return paymentRequestMessagePublisherService.publishPreAuthPayment(createPaymentRequest);
+    }
+
+    @PostMapping(path = "/api/payment/post-auth", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CreatePaymentResponse postAuth(@RequestBody @Valid CreatePaymentRequest createPaymentRequest) {
+        return paymentRequestMessagePublisherService.publishPostAuthPayment(createPaymentRequest);
+    }
 }

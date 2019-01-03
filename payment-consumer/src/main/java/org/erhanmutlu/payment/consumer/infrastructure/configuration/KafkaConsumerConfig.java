@@ -70,7 +70,7 @@ public class KafkaConsumerConfig {
         DefaultKafkaConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerConfigs());
 
         JsonDeserializer<String> valueDeserializer = new JsonDeserializer<>();
-        valueDeserializer.addTrustedPackages("org.erhanmutlu.payment.common");
+        valueDeserializer.addTrustedPackages("*");
         consumerFactory.setValueDeserializer(valueDeserializer);
         consumerFactory.setKeyDeserializer(new StringDeserializer());
 
