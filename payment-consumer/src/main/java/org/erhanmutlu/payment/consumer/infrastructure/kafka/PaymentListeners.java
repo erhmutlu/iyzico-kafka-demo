@@ -23,7 +23,7 @@ public class PaymentListeners {
     public void consumePaymentAuthMessage(PaymentAuthRequestMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
         logger.info("consuming auth message from partition: {} with uniqueId: {}, conversationId: {}", partition, message.getUniqueId(), message.getConversationId());
-        wait4();
+        wait3();
         logger.info("done");
     }
 
@@ -31,7 +31,7 @@ public class PaymentListeners {
     public void consumePaymentPreAuthMessage(PaymentPreAuthRequestMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
         logger.info("consuming pre-auth message from partition: {} with uniqueId: {}, conversationId: {}", partition, message.getUniqueId(), message.getConversationId());
-        wait4();
+        wait3();
         logger.info("done");
     }
 
@@ -39,12 +39,15 @@ public class PaymentListeners {
     public void consumePaymentPostAuthMessage(PaymentPostAuthRequestMessage message,
                         @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
         logger.info("consuming post-auth message from partition: {} with uniqueId: {}", partition, message.getUniqueId());
-        wait4();
+        wait3();
         logger.info("done");
     }
 
-    private void wait4() {
-        long start = new Date().getTime();
-        while (new Date().getTime() - start < 3000L) {}
+    private void wait3() {
+        try {
+            Thread.sleep(3000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

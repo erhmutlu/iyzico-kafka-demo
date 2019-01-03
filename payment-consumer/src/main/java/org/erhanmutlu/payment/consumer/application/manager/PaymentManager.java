@@ -12,7 +12,7 @@ public class PaymentManager {
         this.bankService = bankService;
     }
 
-    public void pay(){
+    public void auth(){
 
     }
 }
