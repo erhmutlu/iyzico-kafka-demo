@@ -54,7 +54,7 @@ public class KafkaConsumerConfig {
         ContainerProperties containerProperties = factory.getContainerProperties();
         containerProperties.setConsumerTaskExecutor(messageProcessorExecutor());
         containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
-        containerProperties.setIdleEventInterval(30000L);
+        containerProperties.setIdleEventInterval(60000L);
         containerProperties.setCommitLogLevel(LogIfLevelEnabled.Level.INFO);
 
         return factory;
