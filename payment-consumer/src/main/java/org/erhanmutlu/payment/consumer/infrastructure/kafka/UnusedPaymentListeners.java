@@ -20,7 +20,7 @@ public class UnusedPaymentListeners {
     @SendTo("Topic2")
     public String consume(IyzicoIdempotentMessage message,
                                              @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
-        logger.info("partition: {}, Message read. uniqueId: {}", partition, message.getUniqueId());
+        logger.info("consuming by dummy listener from partition: {} with uniqueId: {}", partition, message.getUniqueId());
         wait3();
         logger.info("done");
 //        throw new RuntimeException("asdasd");

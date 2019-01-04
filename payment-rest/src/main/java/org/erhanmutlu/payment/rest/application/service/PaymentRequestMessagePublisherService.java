@@ -1,7 +1,6 @@
 package org.erhanmutlu.payment.rest.application.service;
 
 import org.erhanmutlu.payment.common.kafka.PaymentAuthRequestMessage;
-import org.erhanmutlu.payment.common.PaymentType;
 import org.erhanmutlu.payment.common.kafka.PaymentPostAuthRequestMessage;
 import org.erhanmutlu.payment.common.kafka.PaymentPreAuthRequestMessage;
 import org.erhanmutlu.payment.rest.application.converter.PaymentAuthRequestToMessageConverter;
@@ -10,6 +9,7 @@ import org.erhanmutlu.payment.rest.application.converter.PaymentPreAuthRequestTo
 import org.erhanmutlu.payment.rest.application.request.PaymentPostAuthRequest;
 import org.erhanmutlu.payment.rest.application.request.PaymentPreAuthRequest;
 import org.erhanmutlu.payment.rest.application.response.CreatePaymentResponse;
+import org.erhanmutlu.payment.rest.application.response.mapper.CreatePaymentResponseMapper;
 import org.erhanmutlu.payment.rest.infrastructure.kafka.MessageProducerService;
 import org.erhanmutlu.payment.rest.application.request.PaymentAuthRequest;
 import org.slf4j.Logger;
@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.time.Clock;
-import java.util.UUID;
 
 @Service
 public class PaymentRequestMessagePublisherService {
@@ -33,15 +31,18 @@ public class PaymentRequestMessagePublisherService {
     private final PaymentAuthRequestToMessageConverter paymentAuthRequestToMessageConverter;
     private final PaymentPreAuthRequestToMessageConverter paymentPreAuthRequestToMessageConverter;
     private final PaymentPostAuthRequestToMessageConverter paymentPostAuthRequestToMessageConverter;
+    private final CreatePaymentResponseMapper createPaymentResponseMapper;
 
     public PaymentRequestMessagePublisherService(MessageProducerService messageProducerService,
                                                  PaymentAuthRequestToMessageConverter paymentAuthRequestToMessageConverter,
                                                  PaymentPreAuthRequestToMessageConverter paymentPreAuthRequestToMessageConverter,
-                                                 PaymentPostAuthRequestToMessageConverter paymentPostAuthRequestToMessageConverter) {
+                                                 PaymentPostAuthRequestToMessageConverter paymentPostAuthRequestToMessageConverter,
+                                                 CreatePaymentResponseMapper createPaymentResponseMapper) {
         this.messageProducerService = messageProducerService;
         this.paymentAuthRequestToMessageConverter = paymentAuthRequestToMessageConverter;
         this.paymentPreAuthRequestToMessageConverter = paymentPreAuthRequestToMessageConverter;
         this.paymentPostAuthRequestToMessageConverter = paymentPostAuthRequestToMessageConverter;
+        this.createPaymentResponseMapper = createPaymentResponseMapper;
     }
 
     public CreatePaymentResponse publishAuthPayment(PaymentAuthRequest paymentAuthRequest) {
@@ -50,7 +51,7 @@ public class PaymentRequestMessagePublisherService {
 
         messageProducerService.write(paymentRequestTopic, paymentAuthRequestMessage);
 
-        return prepareResponse(paymentAuthRequestMessage);
+        return createPaymentResponseMapper.prepareResponse(paymentAuthRequestMessage);
     }
 
     public CreatePaymentResponse publishPreAuthPayment(PaymentPreAuthRequest paymentPreAuthRequest) {
@@ -59,7 +60,7 @@ public class PaymentRequestMessagePublisherService {
 
         messageProducerService.write(paymentRequestTopic, paymentPreAuthRequestMessage);
 
-        return prepareResponse(paymentPreAuthRequestMessage);
+        return createPaymentResponseMapper.prepareResponse(paymentPreAuthRequestMessage);
     }
 
     public CreatePaymentResponse publishPostAuthPayment(@Valid PaymentPostAuthRequest paymentPostAuthRequest) {
@@ -68,32 +69,6 @@ public class PaymentRequestMessagePublisherService {
 
         messageProducerService.write(paymentRequestTopic, paymentPostAuthRequestMessage);
 
-        return prepareResponse(paymentPostAuthRequestMessage);
-    }
-
-    private CreatePaymentResponse prepareResponse(PaymentAuthRequestMessage paymentAuthRequestMessage){
-        CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
-        createPaymentResponse.setIyzicoPaymentUniqueIdentifier(paymentAuthRequestMessage.getUniqueId());
-        createPaymentResponse.setConversationId(paymentAuthRequestMessage.getConversationId());
-        createPaymentResponse.setStatus("pending");
-        createPaymentResponse.setSystemTime(Clock.systemUTC().millis());
-        return createPaymentResponse;
-    }
-
-    private CreatePaymentResponse prepareResponse(PaymentPreAuthRequestMessage paymentPreAuthRequestMessage){
-        CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
-        createPaymentResponse.setIyzicoPaymentUniqueIdentifier(paymentPreAuthRequestMessage.getUniqueId());
-        createPaymentResponse.setConversationId(paymentPreAuthRequestMessage.getConversationId());
-        createPaymentResponse.setStatus("pending");
-        createPaymentResponse.setSystemTime(Clock.systemUTC().millis());
-        return createPaymentResponse;
-    }
-
-    private CreatePaymentResponse prepareResponse(PaymentPostAuthRequestMessage paymentPostAuthRequestMessage){
-        CreatePaymentResponse createPaymentResponse = new CreatePaymentResponse();
-        createPaymentResponse.setIyzicoPaymentUniqueIdentifier(paymentPostAuthRequestMessage.getUniqueId());
-        createPaymentResponse.setStatus("pending");
-        createPaymentResponse.setSystemTime(Clock.systemUTC().millis());
-        return createPaymentResponse;
+        return createPaymentResponseMapper.prepareResponse(paymentPostAuthRequestMessage);
     }
 }

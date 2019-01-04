@@ -17,8 +17,6 @@ import javax.validation.Valid;
 @RestController
 public class PaymentController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
-
     private final PaymentRequestMessagePublisherService paymentRequestMessagePublisherService;
 
     public PaymentController(PaymentRequestMessagePublisherService paymentRequestMessagePublisherService) {
